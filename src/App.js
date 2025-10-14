@@ -34,7 +34,7 @@ function Dashboard() {
 
   // Fetch stats - UPDATED TO USE API_URL
   useEffect(() => {
-    fetch(`${API_URL}/api/stats/overview`)
+    fetch(`${API_URL}/api/claims/stats`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
