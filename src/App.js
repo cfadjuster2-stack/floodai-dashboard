@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Home, AlertCircle, DollarSign, Clock, CheckCircle } from 'lucide-react';
+import ClaimDetail from './components/ClaimDetail';
 
 // Add this constant at the top - uses environment variable or defaults to localhost
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
@@ -7,14 +8,15 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
-  const [claims, setClaims] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    totalClaims: 0,
-    rcTotal: 0,
-    paidTotal: 0,
-    avgDaysToClose: 0
-  });
+const [claims, setClaims] = useState([]);
+const [loading, setLoading] = useState(true);
+const [selectedClaimId, setSelectedClaimId] = useState(null);
+const [stats, setStats] = useState({
+  totalClaims: 0,
+  rcTotal: 0,
+  paidTotal: 0,
+  avgDaysToClose: 0
+});
 
   // Fetch claims - UPDATED TO USE API_URL
   useEffect(() => {
@@ -71,8 +73,13 @@ function Dashboard() {
     </div>
   );
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+  // Show ClaimDetail if a claim is selected
+if (selectedClaimId) {
+  return <ClaimDetail claimId={selectedClaimId} onBack={() => setSelectedClaimId(null)} />;
+}
+
+return (
+  <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
       {/* Header */}
       <div style={{ backgroundColor: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '16px' }}>
@@ -191,7 +198,12 @@ function Dashboard() {
                     )
                     .map((claim, index) => (
                       <tr key={claim.id} style={{ borderTop: index > 0 ? '1px solid #eee' : 'none' }}>
-                        <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '500', color: '#2196f3' }}>{claim.claim_number}</td>
+                        <td 
+  style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '500', color: '#2196f3', cursor: 'pointer', textDecoration: 'underline' }} 
+  onClick={() => setSelectedClaimId(claim.id)}
+>
+  {claim.claim_number}
+</td>
                         <td style={{ padding: '12px 16px', fontSize: '14px' }}>{claim.policyholder_name || 'N/A'}</td>
                         <td style={{ padding: '12px 16px', fontSize: '14px' }}>
                           <span style={{ padding: '4px 8px', backgroundColor: '#e1bee7', color: '#6a1b9a', borderRadius: '4px', fontSize: '12px', fontWeight: '500' }}>
