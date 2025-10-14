@@ -36,11 +36,16 @@ function Dashboard() {
   useEffect(() => {
     fetch(`${API_URL}/api/claims/stats`)
       .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setStats(data.data);
-        }
-      })
+     .then(data => {
+      if (data.success) {
+    setStats({
+      totalClaims: parseInt(data.data.total_claims) || 0,
+      rcTotal: parseFloat(data.data.total_estimated_loss) || 0,
+      paidTotal: 0, // Not available in current backend
+      avgDaysToClose: 0 // Not available in current backend
+    });
+  }
+})
       .catch(err => console.error('Error fetching stats:', err));
   }, []);
 
