@@ -79,7 +79,7 @@ function ClaimDetail({ claimId, onBack }) {
   };
 
   const handleDelete = async (fileId, filename) => {
-    if (!confirm(`Delete ${filename}?`)) return;
+    if (!window.confirm(`Delete ${filename}?`)) return;
 
     try {
       const response = await fetch(`${API_URL}/api/claims/${claimId}/files/${fileId}`, {
