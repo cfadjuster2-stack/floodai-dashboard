@@ -1,68 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Home, AlertCircle, DollarSign, Clock, CheckCircle } from 'lucide-react';
 
-const sampleClaims = [
-  {
-    fileNumber: "8702987904",
-    insured: "ROYS RESTAURANT",
-    dateAssigned: "2024-09-28",
-    adjuster: "JP",
-    status: "Closed",
-    daysOpen: 48,
-    rc: 714000,
-    paid: 14851.20
-  },
-  {
-    fileNumber: "9905940304",
-    insured: "CARLON",
-    dateAssigned: "2024-09-27",
-    adjuster: "CP",
-    status: "Closed",
-    daysOpen: 42,
-    rc: 350000,
-    paid: 9100
-  }
-];
+// Add this constant at the top - uses environment variable or defaults to localhost
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [claims, setClaims] = useState([]);
-const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-  // Fetch real claims from backend
-  fetch('http://localhost:5000/api/claims')
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        setClaims(data.data);
-      }
-      setLoading(false);
-    })
-    .catch(err => {
-      console.error('Error fetching claims:', err);
-      setLoading(false);
-    });
-}, []);
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
-  totalClaims: 0,
-  rcTotal: 0,
-  paidTotal: 0,
-  avgDaysToClose: 0
-});
+    totalClaims: 0,
+    rcTotal: 0,
+    paidTotal: 0,
+    avgDaysToClose: 0
+  });
 
-useEffect(() => {
-  // Fetch real data from backend
-  fetch('http://localhost:5000/api/stats/overview')
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        setStats(data.data);
-      }
-    })
-    .catch(err => console.error('Error fetching stats:', err));
-}, []);
+  // Fetch claims - UPDATED TO USE API_URL
+  useEffect(() => {
+    fetch(`${API_URL}/api/claims`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setClaims(data.data);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching claims:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  // Fetch stats - UPDATED TO USE API_URL
+  useEffect(() => {
+    fetch(`${API_URL}/api/stats/overview`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setStats(data.data);
+        }
+      })
+      .catch(err => console.error('Error fetching stats:', err));
+  }, []);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -145,9 +125,9 @@ useEffect(() => {
             {/* Stat Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', marginBottom: '24px' }}>
               <StatCard title="Total Claims" value={stats.totalClaims} Icon={Home} color="#2196f3" />
-<StatCard title="RC Total" value={formatCurrency(stats.rcTotal)} Icon={DollarSign} color="#4caf50" />
-<StatCard title="Total Paid" value={formatCurrency(stats.paidTotal)} Icon={CheckCircle} color="#9c27b0" />
-<StatCard title="Avg Days" value={stats.avgDaysToClose} Icon={Clock} color="#ff9800" />
+              <StatCard title="RC Total" value={formatCurrency(stats.rcTotal)} Icon={DollarSign} color="#4caf50" />
+              <StatCard title="Total Paid" value={formatCurrency(stats.paidTotal)} Icon={CheckCircle} color="#9c27b0" />
+              <StatCard title="Avg Days" value={stats.avgDaysToClose} Icon={Clock} color="#ff9800" />
             </div>
 
             {/* Success Message */}
@@ -156,7 +136,7 @@ useEffect(() => {
                 🎉 Dashboard is Live!
               </h3>
               <p style={{ color: '#2e7d32' }}>
-                Your FloodAI dashboard is running. Next, we'll connect it to your backend API to show real claim data.
+                Your FloodAI dashboard is showing real data from {stats.totalClaims} claims worth {formatCurrency(stats.rcTotal)}!
               </p>
             </div>
           </div>
@@ -200,28 +180,28 @@ useEffect(() => {
                 </thead>
                 <tbody>
                   {claims
-  .filter(claim => 
-    claim.policyholder_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    claim.claim_number?.includes(searchTerm)
-  )
-  .map((claim, index) => (
-    <tr key={claim.id} style={{ borderTop: index > 0 ? '1px solid #eee' : 'none' }}>
-      <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '500', color: '#2196f3' }}>{claim.claim_number}</td>
-      <td style={{ padding: '12px 16px', fontSize: '14px' }}>{claim.policyholder_name || 'N/A'}</td>
-      <td style={{ padding: '12px 16px', fontSize: '14px' }}>
-        <span style={{ padding: '4px 8px', backgroundColor: '#e1bee7', color: '#6a1b9a', borderRadius: '4px', fontSize: '12px', fontWeight: '500' }}>
-          {claim.assigned_adjuster_initials || 'Unassigned'}
-        </span>
-      </td>
-      <td style={{ padding: '12px 16px', fontSize: '14px' }}>
-        <span style={{ padding: '4px 8px', backgroundColor: claim.claim_status === 'approved' ? '#c8e6c9' : '#fff9c4', color: claim.claim_status === 'approved' ? '#2e7d32' : '#f57c00', borderRadius: '4px', fontSize: '12px', fontWeight: '500' }}>
-          {claim.claim_status}
-        </span>
-      </td>
-      <td style={{ padding: '12px 16px', fontSize: '14px' }}>{claim.rc ? formatCurrency(claim.rc) : '$0'}</td>
-      <td style={{ padding: '12px 16px', fontSize: '14px' }}>{claim.paid ? formatCurrency(claim.paid) : '$0'}</td>
-    </tr>
-  ))}
+                    .filter(claim => 
+                      claim.policyholder_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      claim.claim_number?.includes(searchTerm)
+                    )
+                    .map((claim, index) => (
+                      <tr key={claim.id} style={{ borderTop: index > 0 ? '1px solid #eee' : 'none' }}>
+                        <td style={{ padding: '12px 16px', fontSize: '14px', fontWeight: '500', color: '#2196f3' }}>{claim.claim_number}</td>
+                        <td style={{ padding: '12px 16px', fontSize: '14px' }}>{claim.policyholder_name || 'N/A'}</td>
+                        <td style={{ padding: '12px 16px', fontSize: '14px' }}>
+                          <span style={{ padding: '4px 8px', backgroundColor: '#e1bee7', color: '#6a1b9a', borderRadius: '4px', fontSize: '12px', fontWeight: '500' }}>
+                            {claim.assigned_adjuster_initials || 'Unassigned'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px 16px', fontSize: '14px' }}>
+                          <span style={{ padding: '4px 8px', backgroundColor: claim.claim_status === 'approved' ? '#c8e6c9' : '#fff9c4', color: claim.claim_status === 'approved' ? '#2e7d32' : '#f57c00', borderRadius: '4px', fontSize: '12px', fontWeight: '500' }}>
+                            {claim.claim_status}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px 16px', fontSize: '14px' }}>{claim.rc ? formatCurrency(claim.rc) : '$0'}</td>
+                        <td style={{ padding: '12px 16px', fontSize: '14px' }}>{claim.paid ? formatCurrency(claim.paid) : '$0'}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
