@@ -19,8 +19,8 @@ function ClaimDetail({ claimId, onBack }) {
   const fetchClaimDetails = async () => {
     try {
       const response = await fetch(`${API_URL}/api/claims/${id}`);
-      const data = await response.json();
-      setClaim(data);
+      const result = await response.json();
+      setClaim(result.data || result);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching claim:', error);
@@ -31,8 +31,8 @@ function ClaimDetail({ claimId, onBack }) {
   const fetchFiles = async () => {
     try {
       const response = await fetch(`${API_URL}/api/claims/${id}/files`);
-      const data = await response.json();
-      setFiles(Array.isArray(data) ? data : []);
+      const result = await response.json();
+      setFiles(result.data || result);
     } catch (error) {
       console.error('Error fetching files:', error);
       setFiles([]);
