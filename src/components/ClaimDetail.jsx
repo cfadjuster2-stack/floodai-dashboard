@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Upload, Download, Trash2, Calendar, DollarSign, MapPin, Phone, Mail, FileText, AlertCircle, Home, Wrench } from 'lucide-react';
+import { ArrowLeft, Upload, Download, Trash2, Calendar, DollarSign, MapPin, Phone, Mail, FileText, AlertCircle, Home, Wrench, Building2, Layers } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://floodai-production.up.railway.app';
 
@@ -200,10 +200,15 @@ function ClaimDetail({ claimId, onBack }) {
                 <div style={{ flex: 1 }}>
                   <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>LOSS ADDRESS</p>
                   <p style={{ fontSize: '16px', fontWeight: '500', color: '#333' }}>{claim.loss_address || 'N/A'}</p>
+                  {(claim.loss_city || claim.loss_state || claim.loss_zip) && (
+                    <p style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
+                      {claim.loss_city}, {claim.loss_state} {claim.loss_zip}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
                   <Calendar style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
@@ -219,43 +224,93 @@ function ClaimDetail({ claimId, onBack }) {
                   </div>
                 </div>
               </div>
+            </div>
 
-              {claim.cause_of_loss && (
-                <div style={{ display: 'flex', alignItems: 'start', gap: '8px', marginBottom: '20px' }}>
-                  <AlertCircle style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>CAUSE OF LOSS</p>
-                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.cause_of_loss}</p>
+            {/* Coverage Information */}
+            <div style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>Coverage & Deductibles</h2>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                <div style={{ padding: '16px', backgroundColor: '#e3f2fd', borderRadius: '8px' }}>
+                  <p style={{ fontSize: '12px', color: '#1976d2', marginBottom: '6px', fontWeight: '600' }}>BUILDING COVERAGE</p>
+                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#1565c0' }}>{formatCurrency(claim.building_coverage)}</p>
+                  <p style={{ fontSize: '12px', color: '#1976d2', marginTop: '8px' }}>Deductible: {formatCurrency(claim.building_deductible)}</p>
+                </div>
+                <div style={{ padding: '16px', backgroundColor: '#f3e5f5', borderRadius: '8px' }}>
+                  <p style={{ fontSize: '12px', color: '#7b1fa2', marginBottom: '6px', fontWeight: '600' }}>CONTENTS COVERAGE</p>
+                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#6a1b9a' }}>{formatCurrency(claim.contents_coverage)}</p>
+                  <p style={{ fontSize: '12px', color: '#7b1fa2', marginTop: '8px' }}>Deductible: {formatCurrency(claim.contents_deductible)}</p>
+                </div>
+              </div>
+
+              {claim.mortgagee_name && (
+                <div style={{ marginTop: '20px', padding: '16px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', fontWeight: '600' }}>MORTGAGEE</p>
+                  <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.mortgagee_name}</p>
+                  {claim.mortgagee_address && (
+                    <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>{claim.mortgagee_address}</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Property Details */}
+            <div style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>Property Details</h2>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                {claim.building_type && (
+                  <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
+                    <Building2 style={{ width: '18px', height: '18px', color: '#999', marginTop: '2px' }} />
+                    <div>
+                      <p style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>BUILDING TYPE</p>
+                      <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.building_type}</p>
+                    </div>
                   </div>
-                </div>
-              )}
-
-              {claim.property_type && (
-                <div style={{ display: 'flex', alignItems: 'start', gap: '8px', marginBottom: '20px' }}>
-                  <Home style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>PROPERTY TYPE</p>
-                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.property_type}</p>
+                )}
+                {claim.occupancy && (
+                  <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
+                    <Home style={{ width: '18px', height: '18px', color: '#999', marginTop: '2px' }} />
+                    <div>
+                      <p style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>OCCUPANCY</p>
+                      <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.occupancy}</p>
+                    </div>
                   </div>
-                </div>
-              )}
-
-              {claim.loss_description && (
-                <div style={{ marginBottom: '20px' }}>
-                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '8px', textTransform: 'uppercase', fontWeight: '600' }}>LOSS DESCRIPTION</p>
-                  <p style={{ fontSize: '14px', color: '#555', backgroundColor: '#f5f5f5', padding: '12px', borderRadius: '6px', lineHeight: '1.6' }}>{claim.loss_description}</p>
-                </div>
-              )}
-
-              {claim.damage_description && (
-                <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
-                  <Wrench style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '8px', textTransform: 'uppercase', fontWeight: '600' }}>DAMAGE DESCRIPTION</p>
-                    <p style={{ fontSize: '14px', color: '#555', backgroundColor: '#f5f5f5', padding: '12px', borderRadius: '6px', lineHeight: '1.6' }}>{claim.damage_description}</p>
+                )}
+                {claim.foundation && (
+                  <div>
+                    <p style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>FOUNDATION</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.foundation}</p>
                   </div>
-                </div>
-              )}
+                )}
+                {claim.construction_type && (
+                  <div>
+                    <p style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>CONSTRUCTION TYPE</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.construction_type}</p>
+                  </div>
+                )}
+                {claim.flood_zone && (
+                  <div>
+                    <p style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>FLOOD ZONE</p>
+                    <p style={{ fontSize: '14px', fontWeight: '600', color: '#d32f2f', backgroundColor: '#ffebee', padding: '4px 8px', borderRadius: '4px', display: 'inline-block' }}>{claim.flood_zone}</p>
+                  </div>
+                )}
+                {claim.number_of_floors && (
+                  <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
+                    <Layers style={{ width: '18px', height: '18px', color: '#999', marginTop: '2px' }} />
+                    <div>
+                      <p style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>NUMBER OF FLOORS</p>
+                      <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.number_of_floors}</p>
+                    </div>
+                  </div>
+                )}
+                {claim.date_of_construction && (
+                  <div>
+                    <p style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>DATE OF CONSTRUCTION</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{formatDate(claim.date_of_construction)}</p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Documents & Files */}
@@ -374,6 +429,13 @@ function ClaimDetail({ claimId, onBack }) {
                 <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>ASSIGNED TO</p>
                 <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.assigned_to || claim.assigned_adjuster_initials || 'Unassigned'}</p>
               </div>
+
+              {claim.date_assigned && (
+                <div style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>DATE ASSIGNED</p>
+                  <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{formatDate(claim.date_assigned)}</p>
+                </div>
+              )}
 
               {claim.report_date && (
                 <div style={{ marginBottom: '20px' }}>
