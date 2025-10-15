@@ -97,11 +97,11 @@ function ClaimDetail({ claimId, onBack }) {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64">Loading...</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>Loading...</div>;
   }
 
   if (!claim) {
-    return <div className="flex justify-center items-center h-64">Claim not found</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>Claim not found</div>;
   }
 
   const formatDate = (dateString) => {
@@ -124,181 +124,224 @@ function ClaimDetail({ claimId, onBack }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+    <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '24px' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        {/* Back Button */}
         <button
           onClick={onBack}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: '#666',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            marginBottom: '24px',
+            fontSize: '14px'
+          }}
         >
-          <ArrowLeft className="w-5 h-5 mr-2" />
+          <ArrowLeft style={{ width: '20px', height: '20px', marginRight: '8px' }} />
           Back to Claims
         </button>
 
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Claim {claim.claim_number || claim.id}
+        {/* Header */}
+        <div style={{ marginBottom: '24px' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#333', marginBottom: '12px' }}>
+            Claim {claim.claim_number || `FL-2025-${String(claim.id).padStart(5, '0')}`}
           </h1>
-          <div className="flex gap-2">
-            <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <span style={{ padding: '6px 12px', backgroundColor: '#fff9c4', color: '#f57c00', borderRadius: '16px', fontSize: '13px', fontWeight: '500' }}>
               {claim.status || 'new'}
             </span>
-            <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+            <span style={{ padding: '6px 12px', backgroundColor: '#e1bee7', color: '#6a1b9a', borderRadius: '16px', fontSize: '13px', fontWeight: '500' }}>
               {claim.priority || 'normal'} priority
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Main Information */}
-          <div className="lg:col-span-2 space-y-6">
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+          {/* Left Column */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Policyholder Information */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Policyholder Information</h2>
-              <div className="grid grid-cols-2 gap-6">
+            <div style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>Policyholder Information</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                 <div>
-                  <p className="text-sm text-gray-500 mb-1">NAME</p>
-                  <p className="font-medium text-gray-900">{claim.insured_name || 'N/A'}</p>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>NAME</p>
+                  <p style={{ fontSize: '16px', fontWeight: '500', color: '#333' }}>{claim.insured_name || claim.policyholder_name || 'N/A'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 mb-1">POLICY NUMBER</p>
-                  <p className="font-medium text-gray-900">{claim.policy_number || 'N/A'}</p>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>POLICY NUMBER</p>
+                  <p style={{ fontSize: '16px', fontWeight: '500', color: '#333' }}>{claim.policy_number || 'N/A'}</p>
                 </div>
-                <div className="flex items-start gap-2">
-                  <Mail className="w-5 h-5 text-gray-400 mt-1" />
+                <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
+                  <Mail style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Email</p>
-                    <p className="text-blue-600">{claim.email || 'N/A'}</p>
+                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px' }}>Email</p>
+                    <p style={{ fontSize: '14px', color: '#2196f3' }}>{claim.email || 'N/A'}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-2">
-                  <Phone className="w-5 h-5 text-gray-400 mt-1" />
+                <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
+                  <Phone style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Phone</p>
-                    <p className="font-medium text-gray-900">{claim.phone || 'N/A'}</p>
+                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px' }}>Phone</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.phone || 'N/A'}</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Loss Information */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Loss Information</h2>
+            <div style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>Loss Information</h2>
               
-              <div className="flex items-start gap-2 mb-4">
-                <MapPin className="w-5 h-5 text-gray-400 mt-1" />
-                <div className="flex-1">
-                  <p className="text-sm text-gray-500 mb-1">LOSS ADDRESS</p>
-                  <p className="font-medium text-gray-900">{claim.loss_address || 'N/A'}</p>
+              <div style={{ display: 'flex', alignItems: 'start', gap: '8px', marginBottom: '20px' }}>
+                <MapPin style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>LOSS ADDRESS</p>
+                  <p style={{ fontSize: '16px', fontWeight: '500', color: '#333' }}>{claim.loss_address || 'N/A'}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                <div className="flex items-start gap-2">
-                  <Calendar className="w-5 h-5 text-gray-400 mt-1" />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
+                  <Calendar style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Loss Date</p>
-                    <p className="font-medium text-gray-900">{formatDate(claim.date_of_loss)}</p>
+                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px' }}>Loss Date</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{formatDate(claim.date_of_loss)}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-2">
-                  <DollarSign className="w-5 h-5 text-gray-400 mt-1" />
+                <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
+                  <DollarSign style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Estimated Loss</p>
-                    <p className="font-medium text-green-600">{formatCurrency(claim.estimated_loss)}</p>
+                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px' }}>Estimated Loss</p>
+                    <p style={{ fontSize: '14px', fontWeight: '600', color: '#4caf50' }}>{formatCurrency(claim.estimated_loss)}</p>
                   </div>
                 </div>
               </div>
 
               {claim.cause_of_loss && (
-                <div className="mt-4 flex items-start gap-2">
-                  <AlertCircle className="w-5 h-5 text-gray-400 mt-1" />
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-500 mb-1">CAUSE OF LOSS</p>
-                    <p className="font-medium text-gray-900">{claim.cause_of_loss}</p>
+                <div style={{ display: 'flex', alignItems: 'start', gap: '8px', marginBottom: '20px' }}>
+                  <AlertCircle style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>CAUSE OF LOSS</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.cause_of_loss}</p>
                   </div>
                 </div>
               )}
 
               {claim.property_type && (
-                <div className="mt-4 flex items-start gap-2">
-                  <Home className="w-5 h-5 text-gray-400 mt-1" />
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-500 mb-1">PROPERTY TYPE</p>
-                    <p className="font-medium text-gray-900">{claim.property_type}</p>
+                <div style={{ display: 'flex', alignItems: 'start', gap: '8px', marginBottom: '20px' }}>
+                  <Home style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>PROPERTY TYPE</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.property_type}</p>
                   </div>
                 </div>
               )}
 
               {claim.loss_description && (
-                <div className="mt-4">
-                  <p className="text-sm text-gray-500 mb-2">LOSS DESCRIPTION</p>
-                  <p className="text-gray-700 bg-gray-50 p-3 rounded">{claim.loss_description}</p>
+                <div style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '8px', textTransform: 'uppercase', fontWeight: '600' }}>LOSS DESCRIPTION</p>
+                  <p style={{ fontSize: '14px', color: '#555', backgroundColor: '#f5f5f5', padding: '12px', borderRadius: '6px', lineHeight: '1.6' }}>{claim.loss_description}</p>
                 </div>
               )}
 
               {claim.damage_description && (
-                <div className="mt-4 flex items-start gap-2">
-                  <Wrench className="w-5 h-5 text-gray-400 mt-1" />
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-500 mb-2">DAMAGE DESCRIPTION</p>
-                    <p className="text-gray-700 bg-gray-50 p-3 rounded">{claim.damage_description}</p>
+                <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
+                  <Wrench style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: '12px', color: '#666', marginBottom: '8px', textTransform: 'uppercase', fontWeight: '600' }}>DAMAGE DESCRIPTION</p>
+                    <p style={{ fontSize: '14px', color: '#555', backgroundColor: '#f5f5f5', padding: '12px', borderRadius: '6px', lineHeight: '1.6' }}>{claim.damage_description}</p>
                   </div>
                 </div>
               )}
             </div>
 
             {/* Documents & Files */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Documents & Files</h2>
+            <div style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>Documents & Files</h2>
               
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 mb-4">
+              <div style={{ border: '2px dashed #ddd', borderRadius: '8px', padding: '24px', marginBottom: '20px', backgroundColor: '#fafafa' }}>
                 <input
                   type="file"
                   multiple
                   onChange={handleFileSelect}
-                  className="mb-3"
+                  style={{ marginBottom: '12px', fontSize: '14px' }}
                 />
                 <button
                   onClick={handleUpload}
                   disabled={uploading || selectedFiles.length === 0}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 16px',
+                    backgroundColor: uploading || selectedFiles.length === 0 ? '#ccc' : '#2196f3',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: uploading || selectedFiles.length === 0 ? 'not-allowed' : 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '500'
+                  }}
                 >
-                  <Upload className="w-4 h-4" />
+                  <Upload style={{ width: '16px', height: '16px' }} />
                   {uploading ? 'Uploading...' : 'Upload Files'}
                 </button>
               </div>
 
               {files.length === 0 ? (
-                <p className="text-center text-gray-500 py-8">No files uploaded yet</p>
+                <p style={{ textAlign: 'center', color: '#999', padding: '32px 0', fontSize: '14px' }}>No files uploaded yet</p>
               ) : (
-                <div className="space-y-2">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {files.map((file) => (
                     <div
                       key={file.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded hover:bg-gray-100"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '12px',
+                        backgroundColor: '#f5f5f5',
+                        borderRadius: '6px'
+                      }}
                     >
-                      <div className="flex items-center gap-3">
-                        <FileText className="w-5 h-5 text-gray-400" />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <FileText style={{ width: '20px', height: '20px', color: '#999' }} />
                         <div>
-                          <p className="font-medium text-gray-900">{file.filename}</p>
-                          <p className="text-sm text-gray-500">
+                          <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{file.filename}</p>
+                          <p style={{ fontSize: '12px', color: '#999' }}>
                             {new Date(file.uploaded_at).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div style={{ display: 'flex', gap: '8px' }}>
                         <button
                           onClick={() => handleDownload(file.id, file.filename)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                          style={{
+                            padding: '8px',
+                            color: '#2196f3',
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                          }}
                         >
-                          <Download className="w-4 h-4" />
+                          <Download style={{ width: '16px', height: '16px' }} />
                         </button>
                         <button
                           onClick={() => handleDelete(file.id)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded"
+                          style={{
+                            padding: '8px',
+                            color: '#f44336',
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                          }}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 style={{ width: '16px', height: '16px' }} />
                         </button>
                       </div>
                     </div>
@@ -309,45 +352,44 @@ function ClaimDetail({ claimId, onBack }) {
           </div>
 
           {/* Right Column - Assignment & Metadata */}
-          <div className="space-y-6">
-            {/* Claim Assignment */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Claim Assignment</h2>
+          <div>
+            <div style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>Claim Assignment</h2>
               
               {claim.tracking_number && (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-1">TRACKING NUMBER</p>
-                  <p className="font-medium text-gray-900">Carrier Claim Number: {claim.tracking_number}</p>
+                <div style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>TRACKING NUMBER</p>
+                  <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>Carrier Claim Number: {claim.tracking_number}</p>
                 </div>
               )}
 
               {claim.ia_firm_file_number && (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-1">IA FIRM FILE #</p>
-                  <p className="font-medium text-gray-900">Claim File Number: {claim.ia_firm_file_number}</p>
+                <div style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>IA FIRM FILE #</p>
+                  <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>Claim File Number: {claim.ia_firm_file_number}</p>
                 </div>
               )}
 
-              <div className="mb-4">
-                <p className="text-sm text-gray-500 mb-1">ASSIGNED TO</p>
-                <p className="font-medium text-gray-900">{claim.assigned_to || 'Unassigned'}</p>
+              <div style={{ marginBottom: '20px' }}>
+                <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>ASSIGNED TO</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.assigned_to || claim.assigned_adjuster_initials || 'Unassigned'}</p>
               </div>
 
               {claim.report_date && (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-500 mb-1">REPORT DATE</p>
-                  <p className="font-medium text-gray-900">{formatDate(claim.report_date)}</p>
+                <div style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>REPORT DATE</p>
+                  <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{formatDate(claim.report_date)}</p>
                 </div>
               )}
 
-              <div className="mb-4">
-                <p className="text-sm text-gray-500 mb-1">CREATED</p>
-                <p className="font-medium text-gray-900">{formatDate(claim.created_at)}</p>
+              <div style={{ marginBottom: '20px' }}>
+                <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>CREATED</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{formatDate(claim.created_at)}</p>
               </div>
 
               <div>
-                <p className="text-sm text-gray-500 mb-1">LAST UPDATED</p>
-                <p className="font-medium text-gray-900">{formatDate(claim.updated_at)}</p>
+                <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>LAST UPDATED</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{formatDate(claim.updated_at)}</p>
               </div>
             </div>
           </div>
