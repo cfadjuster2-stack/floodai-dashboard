@@ -336,7 +336,7 @@ function ClaimDetail({ claimId, onBack }) {
                         <File style={{ width: '24px', height: '24px', color: '#2196f3' }} />
                         <div>
                           <div style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>
-                            {file.original_filename}
+                            {file.filename}
                           </div>
                           <div style={{ fontSize: '12px', color: '#666' }}>
                             {formatFileSize(file.file_size)} • Uploaded {formatDate(file.uploaded_at)}
@@ -382,13 +382,38 @@ function ClaimDetail({ claimId, onBack }) {
             </div>
           </div>
 
-          {/* Right Column - Timeline & Activities */}
-          <div>
+          {/* Right Column */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Claim Assignment Details */}
             <div style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
               <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>
-                Claim Details
+                Claim Assignment
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {claim.tracking_number && (
+                  <div>
+                    <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Tracking Number</div>
+                    <div style={{ fontSize: '16px', color: '#333' }}>{claim.tracking_number}</div>
+                  </div>
+                )}
+                {claim.edn && (
+                  <div>
+                    <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>EDN</div>
+                    <div style={{ fontSize: '16px', color: '#333' }}>{claim.edn}</div>
+                  </div>
+                )}
+                {claim.date_assigned && (
+                  <div>
+                    <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Date Assigned</div>
+                    <div style={{ fontSize: '16px', color: '#333' }}>{formatDate(claim.date_assigned)}</div>
+                  </div>
+                )}
+                {claim.ia_firm_file_number && (
+                  <div>
+                    <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>IA Firm File #</div>
+                    <div style={{ fontSize: '16px', color: '#333' }}>{claim.ia_firm_file_number}</div>
+                  </div>
+                )}
                 <div>
                   <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Assigned To</div>
                   <div style={{ fontSize: '16px', color: '#333' }}>
@@ -408,27 +433,125 @@ function ClaimDetail({ claimId, onBack }) {
                   <div style={{ fontSize: '16px', color: '#333' }}>{formatDate(claim.updated_at)}</div>
                 </div>
               </div>
-
-              {claim.activities && claim.activities.length > 0 && (
-                <div style={{ marginTop: '32px' }}>
-                  <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#333' }}>
-                    Activity Timeline
-                  </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {claim.activities.map(activity => (
-                      <div key={activity.id} style={{ paddingLeft: '16px', borderLeft: '2px solid #e0e0e0' }}>
-                        <div style={{ fontSize: '13px', fontWeight: '500', color: '#333' }}>
-                          {activity.description}
-                        </div>
-                        <div style={{ fontSize: '12px', color: '#999' }}>
-                          {formatDate(activity.created_at)}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
+
+            {/* Coverage Information */}
+            {(claim.building_coverage || claim.contents_coverage || claim.mortgagee_name) && (
+              <div style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>
+                  Coverage
+                </h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {claim.building_coverage && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Building Coverage</div>
+                      <div style={{ fontSize: '16px', color: '#4caf50', fontWeight: '600' }}>{formatCurrency(claim.building_coverage)}</div>
+                    </div>
+                  )}
+                  {claim.contents_coverage && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Contents Coverage</div>
+                      <div style={{ fontSize: '16px', color: '#4caf50', fontWeight: '600' }}>{formatCurrency(claim.contents_coverage)}</div>
+                    </div>
+                  )}
+                  {claim.building_deductible && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Building Deductible</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{formatCurrency(claim.building_deductible)}</div>
+                    </div>
+                  )}
+                  {claim.contents_deductible && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Contents Deductible</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{formatCurrency(claim.contents_deductible)}</div>
+                    </div>
+                  )}
+                  {claim.mortgagee_name && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Mortgagee</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{claim.mortgagee_name}</div>
+                      {claim.mortgagee_address && (
+                        <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{claim.mortgagee_address}</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Building Information */}
+            {(claim.building_type || claim.flood_zone || claim.construction_type) && (
+              <div style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#333' }}>
+                  Building Info
+                </h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {claim.building_type && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Building Type</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{claim.building_type}</div>
+                    </div>
+                  )}
+                  {claim.occupancy && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Occupancy</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{claim.occupancy}</div>
+                    </div>
+                  )}
+                  {claim.construction_type && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Construction</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{claim.construction_type}</div>
+                    </div>
+                  )}
+                  {claim.foundation && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Foundation</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{claim.foundation}</div>
+                    </div>
+                  )}
+                  {claim.flood_zone && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Flood Zone</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{claim.flood_zone}</div>
+                    </div>
+                  )}
+                  {claim.number_of_floors && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Floors</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{claim.number_of_floors}</div>
+                    </div>
+                  )}
+                  {claim.date_of_construction && (
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px', textTransform: 'uppercase', fontWeight: '600' }}>Built</div>
+                      <div style={{ fontSize: '16px', color: '#333' }}>{formatDate(claim.date_of_construction)}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Activity Timeline */}
+            {claim.activities && claim.activities.length > 0 && (
+              <div style={{ backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#333' }}>
+                  Activity
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {claim.activities.map(activity => (
+                    <div key={activity.id} style={{ paddingLeft: '16px', borderLeft: '2px solid #e0e0e0' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#333' }}>
+                        {activity.description}
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#999' }}>
+                        {formatDate(activity.created_at)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
