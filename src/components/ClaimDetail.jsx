@@ -32,9 +32,10 @@ function ClaimDetail({ claimId, onBack }) {
     try {
       const response = await fetch(`${API_URL}/api/claims/${id}/files`);
       const data = await response.json();
-      setFiles(data);
+      setFiles(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching files:', error);
+      setFiles([]);
     }
   };
 
