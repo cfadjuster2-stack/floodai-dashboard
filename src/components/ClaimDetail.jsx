@@ -68,7 +68,7 @@ function ClaimDetail({ claimId, onBack }) {
 
   const handleDownload = async (fileId, filename) => {
     try {
-      const response = await fetch(`${API_URL}/api/files/${fileId}`);
+      const response = await fetch(`${API_URL}/api/claims/${id}/files/${fileId}`);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -87,7 +87,7 @@ function ClaimDetail({ claimId, onBack }) {
     if (!window.confirm('Are you sure you want to delete this file?')) return;
 
     try {
-      await fetch(`${API_URL}/api/files/${fileId}`, {
+      await fetch(`${API_URL}/api/claims/${id}/files/${fileId}`, {
         method: 'DELETE',
       });
       fetchFiles();
