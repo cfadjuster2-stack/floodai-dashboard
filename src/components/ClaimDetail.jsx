@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Upload, Download, Trash2, Calendar, DollarSign, MapPin, Phone, Mail, FileText, AlertCircle, Home, Wrench } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://floodai-production.up.railway.app';
 
-function ClaimDetail() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+function ClaimDetail({ claimId, onBack }) {
+  const id = claimId;
   const [claim, setClaim] = useState(null);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -129,7 +127,7 @@ function ClaimDetail() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <button
-          onClick={() => navigate('/claims')}
+          onClick={onBack}
           className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
