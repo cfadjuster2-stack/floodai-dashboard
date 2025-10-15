@@ -168,7 +168,7 @@ function ClaimDetail({ claimId, onBack }) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                 <div>
                   <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>NAME</p>
-                  <p style={{ fontSize: '16px', fontWeight: '500', color: '#333' }}>{claim.insured_name || claim.policyholder_name || 'N/A'}</p>
+                  <p style={{ fontSize: '16px', fontWeight: '500', color: '#333' }}>{claim.policyholder_name || claim.insured_name || 'N/A'}</p>
                 </div>
                 <div>
                   <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '600' }}>POLICY NUMBER</p>
@@ -178,14 +178,14 @@ function ClaimDetail({ claimId, onBack }) {
                   <Mail style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
                     <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px' }}>Email</p>
-                    <p style={{ fontSize: '14px', color: '#2196f3' }}>{claim.email || 'N/A'}</p>
+                    <p style={{ fontSize: '14px', color: '#2196f3' }}>{claim.policyholder_email || claim.email || 'N/A'}</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
                   <Phone style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
                     <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px' }}>Phone</p>
-                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.phone || 'N/A'}</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{claim.policyholder_phone || claim.phone || 'N/A'}</p>
                   </div>
                 </div>
               </div>
@@ -208,14 +208,14 @@ function ClaimDetail({ claimId, onBack }) {
                   <Calendar style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
                     <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px' }}>Loss Date</p>
-                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{formatDate(claim.date_of_loss)}</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{formatDate(claim.loss_date || claim.date_of_loss)}</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'start', gap: '8px' }}>
                   <DollarSign style={{ width: '20px', height: '20px', color: '#999', marginTop: '2px' }} />
                   <div>
                     <p style={{ fontSize: '12px', color: '#666', marginBottom: '6px' }}>Estimated Loss</p>
-                    <p style={{ fontSize: '14px', fontWeight: '600', color: '#4caf50' }}>{formatCurrency(claim.estimated_loss)}</p>
+                    <p style={{ fontSize: '14px', fontWeight: '600', color: '#4caf50' }}>{formatCurrency(claim.estimated_loss_amount || claim.estimated_loss)}</p>
                   </div>
                 </div>
               </div>
