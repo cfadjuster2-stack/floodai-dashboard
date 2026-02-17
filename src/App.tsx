@@ -7,6 +7,7 @@ import {
   useAuth,
 } from "@clerk/clerk-react";
 import { createApiClient } from "./apiClient";
+import DocumentUpload from "./components/DocumentUpload";
 
 type Claim = {
   id: string;
@@ -105,6 +106,7 @@ export default function App() {
             Token: {tokenPreview}
           </div>
         )}
+        <DocumentUpload />
       </SignedIn>
 
       {loading && <div>Loading…</div>}
